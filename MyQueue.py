@@ -1,4 +1,4 @@
-class MyQueue: # just an implementation of a queue
+class MyQueue: # just an implementation of a queue for graph traversal
 
     def __init__(self):
         self.holder = []
@@ -16,7 +16,6 @@ class MyQueue: # just an implementation of a queue
                 self.holder = self.holder[1:]   
         except:
             pass
-
         return val  
 
     def IsEmpty(self):

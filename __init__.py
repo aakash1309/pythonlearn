@@ -1,8 +1,8 @@
-import Graph
+import BSGraph
 
 if __name__ == "__main__":
     open('outputPS2.txt', 'w').close()
-    g = Graph.Graph()
+    g = BSGraph.BSGraph()
     g.readActMovieFile("inputPS2.txt")
     g.displayActMov()
     readFile = open('promptsPS2.txt', 'r')

@@ -1,32 +1,23 @@
 import Vertex
 import MyQueue
-class Graph:
+class BSGraph:# Graph implementation
     def __init__(self):
-        self.vertList = []
-        self.numActors = 0
+        self.ActMov = []
         self.edges = []
-        self.numMovies = 0
 
-    def addVertex(self,name,type):
+    def addVertex(self,name,type): # This adds a vertex to the graph. This vertex can be either an actor or a movie
         newVertex = Vertex.Vertex(name,type,False)
-        self.vertList.append(newVertex)
-        if type == "Actor":
-            self.numActors = self.numActors + 1
-        else:
-            self.numMovies = self.numMovies + 1
+        self.ActMov.append(newVertex)
         return newVertex
 
-    def getVertex(self,name):
-        for x in self.vertList:
+    def getVertex(self,name):# Returns the vertex if present in the graph
+        for x in self.ActMov:
             if x.getName() == name:
                 return x
         return None
 
-    def __contains__(self,n):
-        return n in self.vertList
-
-    def addEdge(self,fname,ftype,tname,ttype):
-        nvf = self.getVertex(fname)
+    def addEdge(self,fname,ftype,tname,ttype):# Creates a vertices if not present, 
+        nvf = self.getVertex(fname)           # uses addVertex method to create a vetex and creates a edge b/w these vertice
         nvt = self.getVertex(tname)
         if nvf == None:
             nvf = self.addVertex(fname,ftype)
@@ -38,28 +29,28 @@ class Graph:
         self.edges.append(newEdge);
         return
 
-    def getActors(self):
+    def getActors(self):# Returns all the actors present in the graph
         actorList = []
-        for x in self.vertList:
+        for x in self.ActMov:
             if x.getType() == "Actor":
                 actorList.append(x.getName())
         return actorList
 
-    def getMovies(self):
+    def getMovies(self):# Returns all the movies present in the graph
         movieList = []
-        for x in self.vertList:
+        for x in self.ActMov:
             if x.getType() == "Movie":
                 movieList.append(x.getName())
         return movieList
 
-    def isVertexPresentInEdge(self,name,edge):
+    def isVertexPresentInEdge(self,name,edge):# Checks if the edge contains the input vertex
         i=0;
         while i < len(edge):
             if edge[i].getName() == name:
                 return i
             i=i+1
         return -1
-    def getNeighbours(self,name):
+    def getNeighbours(self,name):# Returns all the vertecies that are direct neighbour to this vertex
         neighbourList = []
         for edge in self.edges:
             thing_index = self.isVertexPresentInEdge(name,edge)
@@ -67,7 +58,7 @@ class Graph:
                 neighbourList.append(edge[abs(thing_index-1)])
         return neighbourList
 
-    def readActMovieFile(self,inputFile):
+    def readActMovieFile(self,inputFile):#Reads the input file and creates the graph
         f = open(inputFile, "r")
         for x in f:
             x = x.rstrip().split("/")
@@ -80,23 +71,25 @@ class Graph:
                     i = i + 1;
         f.close()
 
-    def displayActMov(self):
+    def displayActMov(self):# outputs all the actors, movies and their count
+        movies = self.getMovies()
+        actors = self.getActors()
         file = open('outputPS2.txt', 'a+')
         file.write("--------Function displayActMov --------\n")
-        file.write("Total no. of movies: %d\r" % self.numMovies)
-        file.write("Total no. of actors: %d\r\n" % self.numActors)
+        file.write("Total no. of movies: %d\n" % len(movies))
+        file.write("Total no. of actors: %d\n" % len(actors))
         file.write("List of movies:\n")
-        file.writelines(["%s\n" % item for item in self.getMovies()])
+        file.writelines(["%s\n" % item for item in movies])
         file.write("\n");
         file.write("List of Actors:\n")
-        file.writelines(["%s\n" % item for item in self.getActors()])
+        file.writelines(["%s\n" % item for item in actors])
         file.write("-----------------------------------------")
         file.close()
 
-    def displayMoviesOfActor(self,actor):
+    def displayMoviesOfActor(self,actor):# Outputs all the movies that the actor has played role in.
         file = open('outputPS2.txt', 'a+')
         file.write("\n--------Function displayMoviesOfActor--------\n")
-        file.write("Actor name: %s\r" % actor)
+        file.write("Actor name: %s\n" % actor)
         file.write("List of movies:\n")
         movieList = self.getNeighbours(actor);
         if len(movieList) == 0:
@@ -106,10 +99,10 @@ class Graph:
         file.close()
 
 
-    def displayActorsOfMovie(self,movie):
+    def displayActorsOfMovie(self,movie):# Outputs all the actors that have taken part in the movie.
         file = open('outputPS2.txt', 'a+')
         file.write("\n--------Function displayActorsOfMovie --------\n")
-        file.write("Movie name: %s\r" % movie)
+        file.write("Movie name: %s\n" % movie)
         file.write("List of Actors:\n")
         actorList = self.getNeighbours(movie);
         if len(actorList) == 0:
@@ -118,11 +111,11 @@ class Graph:
         file.write("-----------------------------------------")
         file.close()
 
-    def findMovieRelation(self, movA, movB):
+    def findMovieRelation(self, movA, movB):# Outputs all the common actors b/w the two movies.
         file = open('outputPS2.txt', 'a+')
         file.write("\n--------Function findMovieRelation --------\n")
-        file.write("Movie A: %s\r" % movA)
-        file.write("Movie B: %s\r" % movB)
+        file.write("Movie A: %s\n" % movA)
+        file.write("Movie B: %s\n" % movB)
         movANeighbours = set(self.getNeighbours(movA));
         movBNeighbours = set(self.getNeighbours(movB));
         commonMembers = movANeighbours.intersection(movBNeighbours)
@@ -134,42 +127,12 @@ class Graph:
         file.write("\n-----------------------------------------")
         file.close()
 
-    def findMovieTransRelationRecursive(self, movA, movB):
+    def findMovieTransRelation(self,movA,movB):# finds path between 2 movies using BFS.
         file = open('outputPS2.txt', 'a+')
         file.write("\n--------Function findMovieTransRelation --------\n")
-        file.write("Movie A: %s\r" % movA)
-        file.write("Movie B: %s\r" % movB)
-        path=""
-        path = self.findPath(movA,movB,path)
-        if path == None:
-            file.write("Related: No");
-            file.write("\n-----------------------------------------")
-        else:
-            file.write("Related: Yes, ")
-            file.write(path)
-            file.write("\n----------------------------------------")
-        file.close()
-
-    def findPathRecursive(self, movA, movB,path):
-        if movA == movB:
-            return path + movA
-        else:
-            path = path + movA + " > "
-        if movA == movB:
-            return path
-        for node in self.getNeighbours(movA):
-            if node.getName() not in path:
-                newpath = self.findPath(node.getName(), movB, path)
-                if newpath: return newpath
-        return None
-
-
-    def findMovieTransRelation(self,movA,movB):
-        file = open('outputPS2.txt', 'a+')
-        file.write("\n--------Function findMovieTransRelation --------\n")
-        file.write("Movie A: %s\r" % movA)
-        file.write("Movie B: %s\r" % movB)
-        for i in self.vertList:
+        file.write("Movie A: %s\n" % movA)
+        file.write("Movie B: %s\n" % movB)
+        for i in self.ActMov:
             if i.getName() == movA:
                 i.visited = True
             else:

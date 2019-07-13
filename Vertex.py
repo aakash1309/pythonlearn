@@ -1,4 +1,4 @@
-class Vertex:
+class Vertex:# Model for vertex
     def __init__(self,name,type,visited):
         self.type = type
         self.name = name
