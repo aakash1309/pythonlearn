@@ -1,0 +1,11 @@
+def readActMovfile(self, inputfile): O(n^2)  --> traverse through each line in file and check if vertex is there and create edge 
+
+def displayActMov(self): O(n) --> traverse through vertices of graph
+
+def displayMoviesOfActor(self, actor): O(2n) --> traverse through edge list and check if vertex there in edge and return its neighbours
+
+def displayActorsOfMovie(self, movie): O(2n) --> traverse through edge list and check if vertex there in edge and return its neighbours
+
+def findMovieRelation(self, movA, movB): O(3n) --> find neighbours of both vertices and find common elements in them
+
+def findMovieTransRelation(self, movA, movB): O(V+E) --> number of vertices + number of edges (As you can see, the worst case (which is what O means), is basically for all vertices if the graph, do a O(1) operation with them - getting it from the queue, then for all outbound edges of v do another O(1) operation, adding their other end to the queue. Thus summing the first O(1) operation for all vertices gives O(V) and summing the O(outbound edge count) over all the vertices gives O(E), which gives O(V)+O(E)=O(V+E). Without the processing of course, or assuming it is O(1) like adding the vertex to a list.)

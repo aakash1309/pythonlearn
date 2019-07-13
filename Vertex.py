@@ -7,9 +7,6 @@ class Vertex:# Model for vertex
     def getType(self):
         return self.type
 
-    def getId(self):
-        return self.id
-
     def getName(self):
         return self.name
 
